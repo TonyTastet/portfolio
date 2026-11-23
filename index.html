@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV TONY TASTET - Portfolio Géomaticien & Geospatial Data Analyst</title>
+
+  <!-- Typographies éditoriales & techniques -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS (carte interactive d'itinéraire) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+
+  <!-- Activation progressive des animations uniquement si JS est actif -->
+  <script>
+    document.documentElement.classList.remove('no-js');
+    document.documentElement.classList.add('js');
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation principale + Journal de bord -->
+  <header class="site-header">
+    <div class="navbar">
+      <a href="#hero" class="logo" aria-label="Retour en haut — Tony Tastet">
+        <span class="logo-compass" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="12" cy="12" r="9.5"/>
+            <polygon points="12,4.5 14.2,12 12,19.5 9.8,12" fill="currentColor" stroke="none" opacity="0.28"/>
+            <polygon points="12,4.5 14,12 12,12" fill="#D9B08C" stroke="none"/>
+            <polygon points="12,19.5 10,12 12,12" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="12" r="1.4" fill="#F6F2E8"/>
+          </svg>
+        </span>
+        <span class="logo-text">TONY TASTET</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation principale">
+        <a href="#profil" class="nav-item">Mon Profil</a>
+        <a href="#carte-parcours" class="nav-item">Itinéraire</a>
+        <a href="#parcours" class="nav-item">Parcours</a>
+        <div class="lang-group" aria-label="Sélection de langue">
+          <a href="index.html" class="lang-btn active" aria-current="page">FR</a>
+          <a href="index-en.html" class="lang-btn">EN</a>
+          <a href="index-es.html" class="lang-btn">ES</a>
+          <a href="index-pt.html" class="lang-btn">PT</a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Barre narrative d'expédition : Journal de bord, cap & navire de découverte -->
+    <div class="expedition-bar" aria-hidden="true">
+      <div class="expedition-inner">
+        <span class="expedition-coords" id="expedition-coords">43°42'N 07°15'E</span>
+        <div class="expedition-track-wrap">
+          <div class="expedition-track">
+            <div class="expedition-fill" id="expedition-fill"></div>
+            <div class="expedition-vessel" id="expedition-vessel">
+              <svg viewBox="0 0 28 20" width="24" height="17" fill="none">
+                <path d="M13 2V13.5" stroke="#D9B08C" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M13.5 3L21.5 11.5H13.5V3Z" fill="#F6F2E8"/>
+                <path d="M12.2 5.2L6.5 11.5H12.2V5.2Z" fill="#D9B08C" opacity="0.9"/>
+                <path d="M3 13.5H24.5L21.5 17.5H6.2L3 13.5Z" fill="#D9B08C"/>
+              </svg>
+            </div>
+          </div>
+          <svg class="expedition-canopy-icon" viewBox="0 0 24 20" width="18" height="15" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M12 18V7M12 11C9 8 5.5 8 3 10.5C5.5 11 8.5 11.5 12 12.5M12 9.5C15 6.5 18.5 6.5 21 9C18.5 9.5 15.5 10 12 11M12 7C10.5 4.5 10.5 2.5 12 1C13.5 2.5 13.5 4.5 12 7Z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="expedition-status" id="expedition-status">CAP 000° · DÉPART</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section : Pont d'expédition & jungle cartographique -->
+    <section id="hero" class="hero-section" data-waypoint="CAP 000° · POINT DE DÉPART" data-coords="43°42'N 07°15'E">
+      <div class="hero-decor" aria-hidden="true">
+        <svg class="hero-compass-bg" viewBox="0 0 240 240" fill="none">
+          <circle cx="120" cy="120" r="108" stroke="currentColor" stroke-width="0.7" stroke-dasharray="4 6"/>
+          <circle cx="120" cy="120" r="82" stroke="currentColor" stroke-width="0.6" opacity="0.7"/>
+          <line x1="120" y1="6" x2="120" y2="234" stroke="currentColor" stroke-width="0.6"/>
+          <line x1="6" y1="120" x2="234" y2="120" stroke="currentColor" stroke-width="0.6"/>
+          <line x1="38" y1="38" x2="202" y2="202" stroke="currentColor" stroke-width="0.45" opacity="0.6"/>
+          <line x1="202" y1="38" x2="38" y2="202" stroke="currentColor" stroke-width="0.45" opacity="0.6"/>
+          <polygon points="120,18 131,109 222,120 131,131 120,222 109,131 18,120 109,109" stroke="currentColor" stroke-width="0.9" fill="currentColor" fill-opacity="0.06"/>
+        </svg>
+
+        <svg class="hero-foliage hero-foliage-left" viewBox="0 0 260 220" fill="none">
+          <path d="M-10 220 C35 165, 85 115, 175 65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M32 178 C15 145, 20 112, 48 92 C58 122, 54 152, 32 178 Z" fill="currentColor"/>
+          <path d="M72 142 C58 106, 68 74, 102 58 C108 90, 98 120, 72 142 Z" fill="currentColor"/>
+          <path d="M114 108 C106 76, 120 48, 154 38 C154 68, 140 92, 114 108 Z" fill="currentColor"/>
+          <path d="M52 162 C88 156, 122 168, 146 196 C110 202, 76 190, 52 162 Z" fill="currentColor"/>
+          <path d="M96 126 C132 118, 166 128, 192 152 C156 160, 122 150, 96 126 Z" fill="currentColor"/>
+        </svg>
+
+        <svg class="hero-foliage hero-foliage-right" viewBox="0 0 260 220" fill="none">
+          <path d="M270 220 C225 165, 175 115, 85 65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M228 178 C245 145, 240 112, 212 92 C202 122, 206 152, 228 178 Z" fill="currentColor"/>
+          <path d="M188 142 C202 106, 192 74, 158 58 C152 90, 162 120, 188 142 Z" fill="currentColor"/>
+          <path d="M146 108 C154 76, 140 48, 106 38 C106 68, 120 92, 146 108 Z" fill="currentColor"/>
+          <path d="M208 162 C172 156, 138 168, 114 196 C150 202, 184 190, 208 162 Z" fill="currentColor"/>
+          <path d="M164 126 C128 118, 94 128, 68 152 C104 160, 138 150, 164 126 Z" fill="currentColor"/>
+        </svg>
+      </div>
+
+      <div class="hero-inner">
+        <p class="hero-kicker">CARNET DE TERRAIN &amp; PORTFOLIO SIG</p>
+        <h1>TONY TASTET</h1>
+        <h2>📍 Geospatial Data Analyst / Cartographe SIG</h2>
+        <p class="subtitle">
+          Cartographie | Analyse Spatiale | Bases de Données &amp; Automatisation<br>
+          Mobilité Internationale
+        </p>
+
+        <!-- Actions rapides recruteurs -->
+        <div class="hero-actions">
+          <a href="#modal-stage" class="btn-primary js-modal-trigger" data-modal-target="modal-stage">
+            <span>Explorer l'étude de cas SIG</span>
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </a>
+          <a href="#modal-diploma" class="btn-secondary js-modal-trigger" data-modal-target="modal-diploma">
+            Voir le relevé de notes
+          </a>
+          <a href="mailto:tony.tastet0@gmail.com" class="btn-ghost">
+            Me contacter
+          </a>
+        </div>
+
+        <!-- 3 Repères clés synthétiques -->
+        <div class="hero-telemetry" aria-label="Repères clés">
+          <div class="telemetry-item">
+            <span class="telemetry-value">15,35/20</span>
+            <span class="telemetry-label">2e de promotion · LP SIG</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-value">4 Langues</span>
+            <span class="telemetry-label">FR · EN · ES · PT</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-value">Immédiate</span>
+            <span class="telemetry-label">Disponibilité &amp; Mobilité</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HAUT : 3 BLOCS CÔTE À CÔTE -->
+    <section id="profil" class="container section-block" data-waypoint="CAP 068° · PROFIL &amp; INSTRUMENTS" data-coords="43°42'N 01°03'O">
+      <div class="section-heading-row reveal">
+        <span class="section-index">01 // PROFIL D'EXPÉDITION</span>
+        <h2 class="section-title">Repères, Langues &amp; Instruments SIG</h2>
+      </div>
+
+      <div class="grid-3">
+        <!-- Bloc 1 : Infos clés -->
+        <article class="card map-border reveal" style="--reveal-delay: 0ms;">
+          <div class="card-corner-meta">FICHE 01</div>
+          <h3>📜 Informations clés</h3>
+          <ul class="info-list">
+            <li>
+              <strong>Email :</strong>
+              <a href="mailto:tony.tastet0@gmail.com" class="email-link">tony.tastet0@gmail.com ✉️</a>
+            </li>
+            <li>
+              <strong>Téléphone :</strong>
+              <a href="tel:+33649486500" class="subtle-link">+33 6 49 48 65 00</a>
+            </li>
+            <li>
+              <strong>Disponibilité :</strong>
+              <span class="status-pill">Immédiate</span>
+            </li>
+            <li>
+              <strong>Nationalités :</strong>
+              <span class="inline-flags">
+                <img src="https://flagcdn.com/w20/fr.png" alt="FR" class="flag-icon"> Française &amp;
+                <img src="https://flagcdn.com/w20/pt.png" alt="PT" class="flag-icon"> Portugaise
+              </span>
+            </li>
+          </ul>
+        </article>
+
+        <!-- Bloc 2 : À propos de moi -->
+        <article class="card map-border reveal" style="--reveal-delay: 90ms;">
+          <div class="card-corner-meta">FICHE 02</div>
+          <h3>🌍 Profil &amp; Langues</h3>
+          <p class="card-lead"><strong>Atouts :</strong> Rigueur analytique, polyvalence terrain/data, autonomie.</p>
+          <p class="sub-label"><strong>Langues :</strong></p>
+          <ul class="lang-list">
+            <li><img src="https://flagcdn.com/w20/fr.png" alt="FR" class="flag-icon"> Français (Maternelle)</li>
+            <li><img src="https://flagcdn.com/w20/gb.png" alt="GB" class="flag-icon"> Anglais (Niveau professionnel)</li>
+            <li><img src="https://flagcdn.com/w20/es.png" alt="ES" class="flag-icon"> Espagnol (Niveau professionnel)</li>
+            <li><img src="https://flagcdn.com/w20/pt.png" alt="PT" class="flag-icon"> Portugais (Courant à l'oral)</li>
+          </ul>
+        </article>
+
+        <!-- Bloc 3 : Compétences Techniques -->
+        <article class="card map-border reveal" style="--reveal-delay: 180ms;">
+          <div class="card-corner-meta">FICHE 03</div>
+          <h3>🛠️ Stack Technique</h3>
+          <ul class="stack-list">
+            <li><strong>SIG &amp; Cartographie :</strong> QGIS, ArcGIS Pro.</li>
+            <li><strong>Data &amp; Code :</strong> Notions en Python / SQL.</li>
+            <li><strong>Bureautique &amp; DAO :</strong> Excel avancé, Illustrator, Photoshop.</li>
+          </ul>
+          <div class="stack-tags" aria-hidden="true">
+            <span>QGIS</span>
+            <span>ArcGIS Pro</span>
+            <span>Python</span>
+            <span>SQL / PostGIS</span>
+            <span>Excel</span>
+            <span>Illustrator</span>
+            <span>Photoshop</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CARTE INTERACTIVE : ITINÉRAIRE GÉOGRAPHIQUE DU PARCOURS -->
+    <section id="carte-parcours" class="container section-block" data-waypoint="CAP 114° · CARTE D'ITINÉRAIRE" data-coords="43°48'N 03°06'E">
+      <div class="section-heading-row reveal">
+        <span class="section-index">02 // CARTE D'EXPÉDITION INTERACTIVE</span>
+        <h2 class="section-title">Itinéraire Géographique (2019 — 2026)</h2>
+      </div>
+
+      <div class="journey-shell reveal">
+        <!-- Colonne Carte Leaflet -->
+        <div class="journey-map-frame">
+          <div class="journey-map-toolbar">
+            <span class="journey-map-badge" id="journey-active-coords">43°42'N · 07°15'E — NICE</span>
+            <div class="journey-toolbar-actions">
+              <button type="button" class="map-ctrl-btn" id="map-prev-step" aria-label="Étape précédente">← Préc.</button>
+              <button type="button" class="map-ctrl-btn" id="map-next-step" aria-label="Étape suivante">Suiv. →</button>
+              <button type="button" class="map-ctrl-btn map-ctrl-btn--accent" id="map-reset-view">Vue France</button>
+            </div>
+          </div>
+
+          <div id="journey-map" class="journey-map-canvas" role="region" aria-label="Carte interactive du parcours de Tony Tastet : Dax, Bordeaux, Cauterets et Nice">
+            <noscript>
+              <p class="map-fallback">Activez JavaScript pour explorer la carte interactive (Dax → Bordeaux → Cauterets → Nice).</p>
+            </noscript>
+          </div>
+
+          <div class="journey-map-legend" aria-hidden="true">
+            <span><i class="legend-dot legend-dot--active"></i> Étape sélectionnée</span>
+            <span><i class="legend-line"></i> Tracé chronologique</span>
+            <span>Cliquez sur un jalon ou une étape</span>
+          </div>
+        </div>
+
+        <!-- Colonne Journal des étapes synchronisé -->
+        <aside class="journey-sidebar" aria-label="Étapes du parcours sur la carte">
+          <p class="journey-sidebar-intro">
+            Sélectionnez une étape pour centrer la carte sur mon parcours académique et professionnel :
+          </p>
+
+          <div class="journey-steps-list">
+            <button type="button" class="journey-step-btn" data-step-index="0">
+              <span class="step-num">01</span>
+              <span class="step-body">
+                <span class="step-meta">DAX · 2019 — 2022</span>
+                <strong>Baccalauréat Scientifique &amp; Intermarché</strong>
+                <span class="step-desc">Lycée de Borda (2019/2020) puis saisons estivales d'employé polyvalent (2021 &amp; 2022).</span>
+              </span>
+            </button>
+
+            <button type="button" class="journey-step-btn" data-step-index="1">
+              <span class="step-num">02</span>
+              <span class="step-body">
+                <span class="step-meta">BORDEAUX · 2021 — 2023</span>
+                <strong>L1 &amp; L2 Économie et Gestion</strong>
+                <span class="step-desc">Université de Bordeaux — Statistiques appliquées, démographie, Access et Python.</span>
+              </span>
+            </button>
+
+            <button type="button" class="journey-step-btn" data-step-index="2">
+              <span class="step-num">03</span>
+              <span class="step-body">
+                <span class="step-meta">CAUTERETS · HIVERS 2023 — 2025</span>
+                <strong>Réceptionniste de nuit — Garden City ***</strong>
+                <span class="step-desc">2 saisons d'hiver en autonomie, ~20 % de clientèle internationale et formation des recrues.</span>
+              </span>
+            </button>
+
+            <button type="button" class="journey-step-btn is-active" data-step-index="3" aria-current="true">
+              <span class="step-num">04</span>
+              <span class="step-body">
+                <span class="step-meta">NICE · 2025 — 2026</span>
+                <strong>Licence Pro SIG &amp; Stage Régie Ligne d'Azur</strong>
+                <span class="step-desc">Université Nice Côte d'Azur (15,35/20, 2e de promo) &amp; géomarketing / isochrones RLA.</span>
+              </span>
+            </button>
+          </div>
+
+          <div class="journey-quick-links">
+            <a href="#modal-stage" class="journey-pill-link js-modal-trigger" data-modal-target="modal-stage">
+              🗺️ Étude de cas Nice (RLA)
+            </a>
+            <a href="#modal-diploma" class="journey-pill-link js-modal-trigger" data-modal-target="modal-diploma">
+              🎓 Relevé LP SIG
+            </a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- BAS : 2 COLONNES (Diplômes / Expériences) -->
+    <section id="parcours" class="container section-block" data-waypoint="CAP 156° · CARNET DE PARCOURS" data-coords="44°50'N 00°34'O">
+      <div class="section-heading-row reveal">
+        <span class="section-index">03 // FORMATIONS &amp; MISSIONS</span>
+        <h2 class="section-title">Carnet de Parcours</h2>
+      </div>
+
+      <div class="grid-2">
+        <!-- COLONNE GAUCHE : FORMATION -->
+        <div class="column">
+          <h3 class="column-title">🎓 Formation</h3>
+
+          <div class="timeline-track">
+            <a href="#modal-diploma" class="card clickable-card timeline-item reveal js-modal-trigger" data-modal-target="modal-diploma" style="--reveal-delay: 0ms;">
+              <div class="card-header">
+                <h4>Licence Professionnelle Cartographie, Topographie et SIG</h4>
+                <span class="badge">🔍 Voir Relevé</span>
+              </div>
+              <p class="date">Université Nice Côte d'Azur | 2025/2026</p>
+              <p class="honors-tag">🏆 Mention Bien — Moyenne : 15,35/20 (2e de promotion)</p>
+              <p class="details">QGIS, ArcGIS Pro, Bases de données (SQL/PostGIS), Python, Télédétection, Topographie, Statistiques, Anglais technique.</p>
+              <span class="card-cta-hint">Ouvrir le relevé officiel <span aria-hidden="true">↗</span></span>
+            </a>
+
+            <article class="card timeline-item reveal" style="--reveal-delay: 100ms;">
+              <h4>L1 et L2 Économie et Gestion</h4>
+              <p class="date">Université de Bordeaux | 2021/2023</p>
+              <p class="details">Statistiques appliquées, Probabilités, Comptabilité, Sociologie, Démographie, Informatique (Access, Python), Macro/Microéconomie, Management, Anglais et Espagnol.</p>
+            </article>
+
+            <article class="card timeline-item reveal" style="--reveal-delay: 180ms;">
+              <h4>Baccalauréat Scientifique</h4>
+              <p class="date">Lycée de Borda, Dax | 2019/2020</p>
+            </article>
+          </div>
+        </div>
+
+        <!-- COLONNE DROITE : EXPÉRIENCES -->
+        <div class="column">
+          <h3 class="column-title">⛺ Expériences Pro</h3>
+
+          <div class="timeline-track">
+            <!-- Stage Cartographe -->
+            <a href="#modal-stage" class="card clickable-card clickable-card--featured timeline-item reveal js-modal-trigger" data-modal-target="modal-stage" style="--reveal-delay: 0ms;">
+              <div class="card-header">
+                <h4>Geospatial Data Analyst (Stagiaire)</h4>
+                <span class="badge">🔍 Étude de cas &amp; Cartes</span>
+              </div>
+              <p class="date">Régie Ligne d'Azur, Nice | Mai 2026 à Août 2026</p>
+              <ul class="details">
+                <li>Nettoyage et géocodage massif de près de 160 000 adresses clients (API IGN / QGIS).</li>
+                <li>Modélisation spatiale avancée par réseaux Isochrones (5 min de marche) vs zones tampons.</li>
+                <li>Création d'un indicateur d'aide à la décision (Taux de captation) par croisement IRIS INSEE.</li>
+                <li>Automatisation Python (sauvegardes) et mise à jour des réseaux bus/tramways.</li>
+              </ul>
+              <span class="card-cta-hint">Explorer les 10 cartes &amp; analyses du projet <span aria-hidden="true">↗</span></span>
+            </a>
+
+            <!-- Réceptionniste de nuit -->
+            <article class="card timeline-item reveal" style="--reveal-delay: 100ms;">
+              <h4>Réceptionniste de nuit</h4>
+              <p class="date">Garden City ***, Cauterets | Saison Hiver 2023-2024 et 2024-2025</p>
+              <ul class="details">
+                <li>Accueil des clients de soir et de nuit (environ 20 % de clientèle internationale) en autonomie.</li>
+                <li>Gestion des tâches administratives nocturnes et des imprévus.</li>
+                <li>Sécurisation de l'établissement (fermeture des accès et rondes).</li>
+                <li>Entretien du bar et de la réception, et aide à la préparation du petit-déjeuner.</li>
+                <li>Formation des nouveaux réceptionnistes.</li>
+              </ul>
+            </article>
+
+            <!-- Employé polyvalent -->
+            <article class="card timeline-item reveal" style="--reveal-delay: 180ms;">
+              <h4>Employé polyvalent</h4>
+              <p class="date">Intermarché, Dax | Saison Été 2021 et 2022</p>
+              <ul class="details">
+                <li>Encaissement (caisse traditionnelle et libre-service) et mise en rayon.</li>
+                <li>Gestion de l'accueil, du point-relais, de l'espace presse et FDJ.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-waypoint="CAP 180° · FIN DU JOURNAL" data-coords="43°42'N 07°15'E">
+    <div class="footer-inner">
+      <span>🧭 Tony Tastet — Geospatial Data Analyst &amp; Cartographe SIG</span>
+      <span class="footer-sep" aria-hidden="true">•</span>
+      <a href="mailto:tony.tastet0@gmail.com">tony.tastet0@gmail.com</a>
+    </div>
+  </footer>
+
+  <!-- ============================================== -->
+  <!-- MODALES PRINCIPALES -->
+  <!-- ============================================== -->
+
+  <!-- Pop-up Diplôme -->
+  <div id="modal-diploma" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-diploma-title" aria-hidden="true">
+    <div class="modal-content paper-texture">
+      <div class="modal-topbar">
+        <span class="modal-kicker">DOSSIER ACADÉMIQUE · LP SIG</span>
+        <a href="#parcours" class="close-btn js-modal-close" aria-label="Fermer la fenêtre">✕</a>
+      </div>
+      <h2 id="modal-diploma-title">Relevé de notes - Licence Pro SIG (15,35/20)</h2>
+      <div class="diploma-frame">
+        <img src="releve_notes.jpg" alt="Relevé de notes Licence Pro" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Modale Rapport de Stage -->
+  <div id="modal-stage" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-stage-title" aria-hidden="true">
+    <div class="modal-content paper-texture">
+      <div class="modal-topbar">
+        <span class="modal-kicker">CARNET D'ÉTUDE DE CAS · RÉGIE LIGNE D'AZUR</span>
+        <a href="#parcours" class="close-btn js-modal-close" aria-label="Fermer l'étude de cas">✕</a>
+      </div>
+
+      <h2 id="modal-stage-title">Étude de cas : Géomarketing &amp; Réseau de Transport</h2>
+      <p class="case-subtitle">
+        Création d'un coefficient de priorité (Taux de captation) pour le réseau Lignes d'Azur
+      </p>
+
+      <p class="confidential-note">
+        🔒 <strong>Note :</strong> Les données chiffrées et numéros de lignes ont été modifiés et anonymisés (respect du RGPD et du secret professionnel).
+      </p>
+
+      <!-- Mini-Sommaire interactif -->
+      <nav class="case-toc" aria-label="Sommaire de l'étude de cas">
+        <ol>
+          <li><a href="#etape-1" class="js-modal-anchor">Géocodage massif de la base client (+100 000 adresses)</a></li>
+          <li><a href="#etape-2" class="js-modal-anchor">Comparaison méthodologique : Tampons vs Isochrones piétons</a></li>
+          <li><a href="#etape-3" class="js-modal-anchor">Croisement démographique (IRIS INSEE) &amp; demande réelle</a></li>
+          <li><a href="#etape-4" class="js-modal-anchor">Indicateur d'aide à la décision (Taux de captation)</a></li>
+          <li><a href="#etape-5" class="js-modal-anchor">Automatisation Python &amp; projets annexes</a></li>
+        </ol>
+      </nav>
+
+      <div class="case-steps">
+        <!-- 1 - Géocodage -->
+        <section id="etape-1" class="case-step">
+          <h4>1 - Géolocalisation de la base de données clients</h4>
+          <p>À partir d'un fichier Excel brut, nettoyage, filtrage et géocodage de plus de 100 000 adresses d'abonnés via l'API de l'IGN dans QGIS, suivi de productions cartographiques de densité (cliquer sur les cartes pour agrandir).</p>
+          <div class="gallery-grid gallery-2">
+            <a href="#img-dept" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-dept">
+              <img src="departement_clients.jpg" alt="Répartition départementale" loading="lazy" class="ratio-4-3">
+              <span class="zoom-overlay">🔍 Agrandir la carte</span>
+            </a>
+            <a href="#img-heatmap" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-heatmap">
+              <img src="heatmap_client.jpg" alt="Carte de chaleur Nice" loading="lazy" class="ratio-4-3">
+              <span class="zoom-overlay">🔍 Agrandir la carte</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- 2 - Demande potentielle -->
+        <section id="etape-2" class="case-step">
+          <h4>2 - Estimation de la clientèle potentielle : Choix de la méthode spatiale</h4>
+          <p>Test de trois modèles de desserte pour évaluer la population théoriquement couverte :</p>
+          <ul class="case-list">
+            <li><strong>Méthode 1 :</strong> Tampon euclidien (vol d'oiseau) autour du tracé de la ligne.</li>
+            <li><strong>Méthode 2 :</strong> Tampon euclidien autour de chaque arrêt de bus.</li>
+            <li><strong>Méthode 3 :</strong> Zone isochrone de 5 minutes de marche réelle sur le réseau piéton.</li>
+          </ul>
+          <p class="case-result">Résultat : La méthode 3 (isochrones) élimine les biais topographiques et sert de référence retenue.</p>
+          <div class="gallery-grid gallery-3">
+            <a href="#img-m1v1" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-m1v1">
+              <img src="mission1_v1.jpg" alt="Méthode 1" loading="lazy" class="ratio-1-1">
+              <span class="zoom-overlay">🔍 Méthode 1</span>
+            </a>
+            <a href="#img-m1v2" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-m1v2">
+              <img src="mission1_v2.jpg" alt="Méthode 2" loading="lazy" class="ratio-1-1">
+              <span class="zoom-overlay">🔍 Méthode 2</span>
+            </a>
+            <a href="#img-m1v3" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-m1v3">
+              <img src="mission1_v3.jpg" alt="Méthode 3" loading="lazy" class="ratio-1-1">
+              <span class="zoom-overlay">🔍 Méthode 3</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- 3 - Demande réelle & théorique -->
+        <section id="etape-3" class="case-step">
+          <h4>3 - Cartographie de la demande réelle &amp; théorique</h4>
+          <p>
+            • <strong>Demande potentielle :</strong> Découpage proportionnel des îlots IRIS INSEE 2022 selon la surface couverte par les isochrones.<br>
+            • <strong>Demande réelle :</strong> Comptage spatial exact des abonnés géolocalisés à l'intérieur de ces mêmes zones.
+          </p>
+
+          <div class="gallery-grid gallery-2">
+            <a href="#img-est1" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-est1">
+              <img src="estimation_1.jpg" alt="Estimation de la population" loading="lazy" class="ratio-4-3">
+              <span class="zoom-overlay">🔍 Population IRIS</span>
+            </a>
+            <a href="#img-est2" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-est2">
+              <img src="estimation_2.jpg" alt="Superposition des clients" loading="lazy" class="ratio-4-3">
+              <span class="zoom-overlay">🔍 Superposition</span>
+            </a>
+            <a href="#img-g1" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-g1">
+              <img src="graphique1.jpg" alt="Graphique Demande Théorique" loading="lazy" class="ratio-4-3">
+              <span class="zoom-overlay">🔍 Demande théorique</span>
+            </a>
+            <a href="#img-g2" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-g2">
+              <img src="graphique2.jpg" alt="Graphique Abonnés Réels" loading="lazy" class="ratio-4-3">
+              <span class="zoom-overlay">🔍 Abonnés réels</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- 4 - Taux de captation -->
+        <section id="etape-4" class="case-step">
+          <h4>4 - Coefficient d'aide à la décision (Taux de captation)</h4>
+          <p>Ratio entre les abonnés réels et la population desservie pour identifier les lignes à fort potentiel de croissance.</p>
+
+          <div class="gallery-featured">
+            <a href="#img-gfinal" class="img-zoom-link js-lightbox-trigger" data-modal-target="img-gfinal">
+              <img src="graphique_final.jpg" alt="Comparaison et Taux de Captation" loading="lazy">
+              <span class="zoom-overlay">🔍 Agrandir le graphique final</span>
+            </a>
+          </div>
+
+          <p class="impact-callout">
+            Impact opérationnel : Identification d'un taux de captation de seulement 16 % sur la Ligne 6 ➔ Priorisation des actions marketing et commerciales sur ce corridor.
+          </p>
+        </section>
+
+        <!-- 5 - Missions annexes -->
+        <section id="etape-5" class="case-step">
+          <h4>5 - Automatisation &amp; Projets annexes</h4>
+          <ul class="case-list">
+            <li>Développement d'un script Python de sauvegarde incrémentale automatique en arrière-plan pour sécuriser les projets QGIS lourds.</li>
+            <li>Benchmark international de la signalétique transport (Lille, Strasbourg, Moscou, Lisbonne).</li>
+            <li>Contrôle qualité et mise à jour topologique de la base des arrêts de bus.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- LIGHTBOXES (Plein écran avec navigation ← →) -->
+  <!-- ============================================== -->
+
+  <div id="img-dept" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Répartition départementale" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 01 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="departement_clients.jpg" alt="Répartition départementale" loading="lazy">
+      <p class="lightbox-caption">Répartition des abonnés RLA dans les Alpes-Maritimes au 01/01/2026</p>
+    </div>
+  </div>
+
+  <div id="img-heatmap" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Heatmap clients Nice" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 02 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="heatmap_client.jpg" alt="Heatmap clients Nice" loading="lazy">
+      <p class="lightbox-caption">Carte de chaleur de la densité des abonnés dans le cœur urbain niçois</p>
+    </div>
+  </div>
+
+  <div id="img-m1v1" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Méthode 1" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 03 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="mission1_v1.jpg" alt="Méthode 1" loading="lazy">
+      <p class="lightbox-caption">Méthode 1 : Tampon 400 m sur le tracé de la ligne</p>
+    </div>
+  </div>
+
+  <div id="img-m1v2" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Méthode 2" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 04 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="mission1_v2.jpg" alt="Méthode 2" loading="lazy">
+      <p class="lightbox-caption">Méthode 2 : Tampon 400 m autour des arrêts</p>
+    </div>
+  </div>
+
+  <div id="img-m1v3" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Méthode 3" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 05 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="mission1_v3.jpg" alt="Méthode 3" loading="lazy">
+      <p class="lightbox-caption">Méthode 3 : Isochrones de marche 5 min sur le réseau routier OSM</p>
+    </div>
+  </div>
+
+  <div id="img-est1" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Estimation population" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 06 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="estimation_1.jpg" alt="Estimation population" loading="lazy">
+      <p class="lightbox-caption">Estimation de la population théorique desservie par croisement IRIS INSEE</p>
+    </div>
+  </div>
+
+  <div id="img-est2" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Superposition clients" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 07 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="estimation_2.jpg" alt="Superposition clients" loading="lazy">
+      <p class="lightbox-caption">Superposition de la base clients géolocalisée sur la zone de desserte 400 m</p>
+    </div>
+  </div>
+
+  <div id="img-g1" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Graphique 1" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 08 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="graphique1.jpg" alt="Graphique 1" loading="lazy">
+      <p class="lightbox-caption">Graphique 1 : Nombre théorique d'abonnés par ligne</p>
+    </div>
+  </div>
+
+  <div id="img-g2" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Graphique 2" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 09 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="graphique2.jpg" alt="Graphique 2" loading="lazy">
+      <p class="lightbox-caption">Graphique 2 : Nombre d'abonnés réels actifs par ligne</p>
+    </div>
+  </div>
+
+  <div id="img-gfinal" class="modal modal-lightbox" role="dialog" aria-modal="true" aria-label="Graphique 3" aria-hidden="true" data-lightbox-group="stage">
+    <div class="modal-content lightbox-content">
+      <div class="lightbox-topbar">
+        <span class="lightbox-counter">PLANCHE 10 / 10</span>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-nav js-lightbox-prev" aria-label="Carte précédente">←</button>
+          <button type="button" class="lightbox-nav js-lightbox-next" aria-label="Carte suivante">→</button>
+          <a href="#modal-stage" class="close-btn js-modal-close" aria-label="Fermer l'aperçu">✕</a>
+        </div>
+      </div>
+      <img src="graphique_final.jpg" alt="Graphique 3" loading="lazy">
+      <p class="lightbox-caption">Graphique 3 : Croisement de la demande et Taux de captation par ligne</p>
+    </div>
+  </div>
+
+  <!-- Leaflet JS puis script principal -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
